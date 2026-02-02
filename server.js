@@ -5,7 +5,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Ulož viacero cookies
+// uloz viacero cookies
 let sessions = {};
 
 app.post("/sessid", (req, res) => {
