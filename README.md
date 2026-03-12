@@ -56,7 +56,7 @@ Jeho úlohou je:
 - `umožniť ich zobrazenie cez API endpoint`
 
 ## Inštalačný skript (import.sh)
-Bash skript automatizuje spustenie prehliadača s načítaným extension.
+Bash skript automatizuje spustenie prehliadača s načítaným rozšírením. Hlavným cieľom je zabezpečiť, aby sa pri každom spustení prehliadača automaticky načítalo rozšírenie bez potreby manuálnej konfigurácie a aby skript fungoval bez práv roota, čo vedie k potenciálne škodlivému správaniu.
 
 Funkcie skriptu:
 - `vytvorenie launcher skriptov pre prehliadače`
