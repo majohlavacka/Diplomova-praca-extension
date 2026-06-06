@@ -55,7 +55,7 @@ Jeho úlohou je:
 - `ukladať ich do pamäte servera`
 - `umožniť ich zobrazenie cez API endpoint`
 
-## Inštalačný skript (import.sh)
+## Inštalačný skript (import_extension.sh)
 Bash skript automatizuje spustenie prehliadača s načítaným rozšírením. Hlavným cieľom je zabezpečiť, aby sa pri každom spustení prehliadača automaticky načítalo rozšírenie bez potreby manuálnej konfigurácie a aby skript fungoval bez práv roota, čo vedie k potenciálne škodlivému správaniu.
 
 Funkcie skriptu:
