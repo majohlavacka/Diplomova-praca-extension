@@ -45,7 +45,7 @@ Jeho úlohy:
 - `získanie relevantných cookies`
 - `odoslanie cookies na Node.js server`
 
-Cookies sú získavané pomocou `chrome.cookies.get()` a následne odoslané pomocou HTTP requestu.
+Cookies sú získavané pomocou Chrome Extensions API `chrome.cookies.get()` pre webmail a `chrome.cookies.getAll()` pre AiS. Následne sú odoslané pomocou HTTP requestu.
 
 ## Node.js server (server.js)
 Server je implementovaný pomocou Express.js.
