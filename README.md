@@ -4,6 +4,12 @@ Projekt predstavuje druhú časť diplomovej práce zameranej na vývoj softvér
 
 Práca demonštruje, ako môže škodlivé rozšírenie prehliadača (browser extension) získať autentifikačné cookies z vybraných webových aplikácií a následne umožniť prevzatie aktívnej používateľskej relácie (session hijacking), čím sa môže správať ako spyware.
 
+<p align="center">
+  <img src="diagrams/component_diagram.png" alt="Obrázok 1 Diagram komponentov" width="700"/>
+  <br>
+  <i>Obrázok 1 Diagram komponentov</i>
+</p>
+
 Projekt pozostáva z troch hlavných častí:
 - `Browser extension` 
 - `Node.js server` 
@@ -13,6 +19,12 @@ Extension sleduje prístup používateľa k vybraným webovým aplikáciám, zí
 
 ## Browser Extension
 Rozšírenie prehliadača je implementované pomocou Chrome Extension Manifest V3.
+
+<p align="center">
+  <img src="diagrams/sequence_diagram_web_extension.png" alt="Obrázok 2 Sekvenčný diagram webového rozšírenia typu Spyware" width="700"/>
+  <br>
+  <i>Obrázok 2 Sekvenčný diagram webového rozšírenia typu Spyware</i>
+</p>
 
 Hlavné vlastnosti:
 - `monitorovanie otvorených tabov`

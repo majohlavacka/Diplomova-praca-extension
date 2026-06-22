@@ -1,0 +1,20 @@
+@startuml
+title Sekvenčný diagram: Princíp fungovania webového rozšírenia typu Spyware
+participant "Chromium\nBrowser" as browser
+participant "Chrome\nTabs API" as tabs
+participant "Service\nWorker" as sw
+participant "Lokálny Node JS\nServer" as server
+
+browser -> tabs : používateľ prepne na UKF AiS / Webmail kartu
+tabs -> sw : zachytenie kariet
+
+sw -> sw : je URL v zozname stránok?
+
+alt karta je AiS alebo Webmail
+    sw -> sw : ziskaj cookies na základe aplikácie
+    sw -> server : pošli cookies ako POST požiadavku
+else karta nie je v zozname stránok
+    sw -> sw : ignoruj URL
+end
+
+@enduml
